@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1600 1100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #1a1a1a; }
+      .section-title { font: bold 16px sans-serif; fill: #2c3e50; }
+      .component { font: 14px sans-serif; fill: #34495e; }
+      .label { font: 12px sans-serif; fill: #7f8c8d; }
+      .note { font: italic 11px sans-serif; fill: #e74c3c; }
+      .box { fill: #ecf0f1; stroke: #34495e; stroke-width: 2; }
+      .azure-box { fill: #0078d4; opacity: 0.1; stroke: #0078d4; stroke-width: 2; }
+      .k8s-box { fill: #326ce5; opacity: 0.1; stroke: #326ce5; stroke-width: 2; }
+      .frontend-box { fill: #3498db; opacity: 0.2; stroke: #2980b9; stroke-width: 2; }
+      .connector-box { fill: #9b59b6; opacity: 0.2; stroke: #8e44ad; stroke-width: 2; }
+      .worker-box { fill: #2ecc71; opacity: 0.2; stroke: #27ae60; stroke-width: 2; }
+      .data-box { fill: #e74c3c; opacity: 0.2; stroke: #c0392b; stroke-width: 2; }
+      .managed-service { fill: #f39c12; opacity: 0.3; stroke: #e67e22; stroke-width: 2; }
+      .arrow { fill: none; stroke: #34495e; stroke-width: 2; marker-end: url(#arrowhead); }
+      .network-arrow { fill: none; stroke: #3498db; stroke-width: 2; stroke-dasharray: 5,5; marker-end: url(#arrowhead-blue); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#34495e" />
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#3498db" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="800" y="30" text-anchor="middle" class="title">OpenCTI High Availability Architecture - Azure AKS</text>
+  <text x="800" y="50" text-anchor="middle" class="label">Based on Filigran HA recommendations + Azure managed services</text>
+
+  <!-- Azure Cloud -->
+  <rect x="20" y="80" width="1560" height="1000" rx="10" class="azure-box"/>
+  <text x="40" y="105" class="section-title">Azure Cloud</text>
+
+  <!-- Users/Internet -->
+  <rect x="700" y="120" width="200" height="60" rx="5" class="box"/>
+  <text x="800" y="145" text-anchor="middle" class="component">CTI Analysts / Users</text>
+  <text x="800" y="165" text-anchor="middle" class="label">HTTPS Access</text>
+
+  <!-- Azure Load Balancer -->
+  <rect x="700" y="220" width="200" height="60" rx="5" class="managed-service"/>
+  <text x="800" y="245" text-anchor="middle" class="component">Azure Load Balancer</text>
+  <text x="800" y="265" text-anchor="middle" class="label">Public IP + SSL Termination</text>
+  <path d="M 800 180 L 800 220" class="arrow"/>
+
+  <!-- AKS Cluster -->
+  <rect x="60" y="320" width="1480" height="720" rx="10" class="k8s-box"/>
+  <text x="80" y="345" class="section-title">AKS Cluster (Auto-scaling: 3-15 nodes)</text>
+
+  <!-- Ingress Namespace -->
+  <rect x="100" y="370" width="280" height="100" rx="5" class="box"/>
+  <text x="240" y="395" text-anchor="middle" class="section-title">ingress-nginx namespace</text>
+  <rect x="120" y="410" width="240" height="45" rx="3" fill="#f39c12" opacity="0.3" stroke="#e67e22" stroke-width="2"/>
+  <text x="240" y="430" text-anchor="middle" class="component">Nginx Ingress Controller</text>
+  <text x="240" y="445" text-anchor="middle" class="label">Replicas: 3 (HA)</text>
+  <path d="M 800 280 L 800 300 L 240 300 L 240 370" class="arrow"/>
+
+  <!-- THREE SEPARATE PLATFORM CLUSTERS -->
+  <rect x="100" y="500" width="1400" height="510" rx="5" class="k8s-box"/>
+  <text x="120" y="525" class="section-title">opencti namespace - HA Cluster Separation</text>
+
+  <!-- 1. Frontend Cluster (Users only) -->
+  <rect x="120" y="550" width="420" height="240" rx="5" class="frontend-box"/>
+  <text x="140" y="575" class="section-title">1. Frontend Platform Cluster</text>
+  <text x="140" y="595" class="note">For users only - UI + GraphQL</text>
+  
+  <rect x="140" y="610" width="180" height="110" rx="3" class="frontend-box" opacity="0.5"/>
+  <text x="230" y="630" text-anchor="middle" class="component">OpenCTI Platform</text>
+  <text x="230" y="650" text-anchor="middle" class="label">Replicas: 3 (HA)</text>
+  <text x="230" y="665" text-anchor="middle" class="label">Image: opencti/platform</text>
+  <text x="230" y="680" text-anchor="middle" class="label">Auth: OpenID/SAML/Auth0</text>
+  <text x="230" y="695" text-anchor="middle" class="label">Resources: 4-8Gi RAM</text>
+  <text x="230" y="710" text-anchor="middle" class="label">Probes: Configured</text>
+
+  <rect x="340" y="610" width="180" height="90" rx="3" fill="#3498db" opacity="0.3" stroke="#2980b9" stroke-width="2"/>
+  <text x="430" y="635" text-anchor="middle" class="component">Service: frontend</text>
+  <text x="430" y="655" text-anchor="middle" class="label">Type: ClusterIP</text>
+  <text x="430" y="670" text-anchor="middle" class="label">Port: 8080</text>
+  <text x="430" y="685" text-anchor="middle" class="label">Domain: opencti.domain.com</text>
+
+  <rect x="140" y="740" width="380" height="40" rx="3" fill="#e8f4f8" stroke="#3498db" stroke-width="1"/>
+  <text x="330" y="765" text-anchor="middle" class="label">Users access frontend ONLY - no direct backend calls</text>
+
+  <path d="M 240 470 L 240 530 L 230 530 L 230 610" class="arrow"/>
+
+  <!-- 2. Connector-Backend Cluster -->
+  <rect x="580" y="550" width="420" height="240" rx="5" class="connector-box"/>
+  <text x="600" y="575" class="section-title">2. Connector-Backend Cluster</text>
+  <text x="600" y="595" class="note">For connectors - API ingestion only</text>
+  
+  <rect x="600" y="610" width="180" height="110" rx="3" class="connector-box" opacity="0.5"/>
+  <text x="690" y="630" text-anchor="middle" class="component">OpenCTI Platform</text>
+  <text x="690" y="650" text-anchor="middle" class="label">Replicas: 3 (HA)</text>
+  <text x="690" y="665" text-anchor="middle" class="label">Image: opencti/platform</text>
+  <text x="690" y="680" text-anchor="middle" class="label">No user auth required</text>
+  <text x="690" y="695" text-anchor="middle" class="label">Resources: 4-8Gi RAM</text>
+  <text x="690" y="710" text-anchor="middle" class="label">Probes: Configured</text>
+
+  <rect x="800" y="610" width="180" height="90" rx="3" fill="#9b59b6" opacity="0.3" stroke="#8e44ad" stroke-width="2"/>
+  <text x="890" y="635" text-anchor="middle" class="component">Service: connector-api</text>
+  <text x="890" y="655" text-anchor="middle" class="label">Type: ClusterIP</text>
+  <text x="890" y="670" text-anchor="middle" class="label">Port: 8080</text>
+  <text x="890" y="685" text-anchor="middle" class="label">Domain: api.domain.com</text>
+
+  <rect x="600" y="740" width="380" height="40" rx="3" fill="#f3e8f8" stroke="#9b59b6" stroke-width="1"/>
+  <text x="790" y="765" text-anchor="middle" class="label">Connectors → GraphQL API → RabbitMQ (async)</text>
+
+  <!-- 3. Worker-Backend Cluster -->
+  <rect x="1040" y="550" width="420" height="240" rx="5" class="worker-box"/>
+  <text x="1060" y="575" class="section-title">3. Worker-Backend Cluster</text>
+  <text x="1060" y="595" class="note">For workers - data processing only</text>
+  
+  <rect x="1060" y="610" width="180" height="110" rx="3" class="worker-box" opacity="0.5"/>
+  <text x="1150" y="630" text-anchor="middle" class="component">OpenCTI Platform</text>
+  <text x="1150" y="650" text-anchor="middle" class="label">Replicas: 3 (HA)</text>
+  <text x="1150" y="665" text-anchor="middle" class="label">Image: opencti/platform</text>
+  <text x="1150" y="680" text-anchor="middle" class="label">No user auth required</text>
+  <text x="1150" y="695" text-anchor="middle" class="label">Resources: 4-8Gi RAM</text>
+  <text x="1150" y="710" text-anchor="middle" class="label">Probes: Configured</text>
+
+  <rect x="1260" y="610" width="180" height="90" rx="3" fill="#2ecc71" opacity="0.3" stroke="#27ae60" stroke-width="2"/>
+  <text x="1350" y="635" text-anchor="middle" class="component">Service: worker-api</text>
+  <text x="1350" y="655" text-anchor="middle" class="label">Type: ClusterIP</text>
+  <text x="1350" y="670" text-anchor="middle" class="label">Port: 8080</text>
+  <text x="1350" y="685" text-anchor="middle" class="label">Internal only</text>
+
+  <rect x="1060" y="740" width="380" height="40" rx="3" fill="#e8f8f0" stroke="#2ecc71" stroke-width="1"/>
+  <text x="1250" y="765" text-anchor="middle" class="label">Workers pull from RabbitMQ → process → ES/Redis</text>
+
+  <!-- Workers and Connectors -->
+  <rect x="120" y="820" width="630" height="170" rx="5" class="box"/>
+  <text x="140" y="845" class="section-title">Workers (Separate Deployment)</text>
+  <rect x="140" y="860" width="280" height="110" rx="3" class="worker-box" opacity="0.5"/>
+  <text x="280" y="880" text-anchor="middle" class="component">OpenCTI Workers</text>
+  <text x="280" y="900" text-anchor="middle" class="label">Replicas: 9 (3x platform ratio)</text>
+  <text x="280" y="915" text-anchor="middle" class="label">Image: opencti/worker</text>
+  <text x="280" y="930" text-anchor="middle" class="label">OPENCTI_URL=worker-api</text>
+  <text x="280" y="945" text-anchor="middle" class="label">initContainers: wait for platform</text>
+  <text x="280" y="960" text-anchor="middle" class="label">Resources: 1-2Gi RAM</text>
+
+  <rect x="450" y="860" width="280" height="110" rx="3" class="connector-box" opacity="0.5"/>
+  <text x="590" y="880" text-anchor="middle" class="component">Connectors</text>
+  <text x="590" y="900" text-anchor="middle" class="label">MITRE, CVE, AlienVault, etc.</text>
+  <text x="590" y="915" text-anchor="middle" class="label">Replicas: 1 per connector</text>
+  <text x="590" y="930" text-anchor="middle" class="label">OPENCTI_URL=connector-api</text>
+  <text x="590" y="945" text-anchor="middle" class="label">Resources: 256Mi-512Mi RAM</text>
+
+  <!-- Azure Managed Services -->
+  <rect x="800" y="820" width="680" height="170" rx="5" class="data-box"/>
+  <text x="820" y="845" class="section-title">Azure Managed Services (Shared by all clusters)</text>
+  
+  <rect x="820" y="860" width="150" height="50" rx="3" class="managed-service"/>
+  <text x="895" y="880" text-anchor="middle" class="component">ElasticSearch</text>
+  <text x="895" y="900" text-anchor="middle" class="label">Azure Elastic Cloud</text>
+
+  <rect x="990" y="860" width="150" height="50" rx="3" class="managed-service"/>
+  <text x="1065" y="880" text-anchor="middle" class="component">Redis</text>
+  <text x="1065" y="900" text-anchor="middle" class="label">Azure Cache for Redis</text>
+
+  <rect x="1160" y="860" width="150" height="50" rx="3" class="managed-service"/>
+  <text x="1235" y="880" text-anchor="middle" class="component">RabbitMQ</text>
+  <text x="1235" y="900" text-anchor="middle" class="label">AKS-hosted or VM</text>
+
+  <rect x="1330" y="860" width="140" height="50" rx="3" class="managed-service"/>
+  <text x="1400" y="880" text-anchor="middle" class="component">Blob Storage</text>
+  <text x="1400" y="900" text-anchor="middle" class="label">Azure Blob (S3 API)</text>
+
+  <rect x="820" y="930" width="650" height="50" rx="3" fill="#fff3cd" stroke="#ffc107" stroke-width="2"/>
+  <text x="1145" y="955" text-anchor="middle" class="label">All managed services are HA by default - Multi-AZ deployment</text>
+
+  <!-- Connection Arrows -->
+  <path d="M 690 720 L 690 820" class="network-arrow"/>
+  <path d="M 1150 720 L 1150 820" class="network-arrow"/>
+  <path d="M 280 820 L 280 800 L 1150 800 L 1150 720" class="network-arrow"/>
+  <path d="M 590 820 L 590 750 L 690 750 L 690 720" class="network-arrow"/>
+
+  <!-- Storage Layer -->
+  <rect x="100" y="1030" width="1400" height="60" rx="5" fill="#95a5a6" opacity="0.3" stroke="#7f8c8d" stroke-width="2"/>
+  <text x="800" y="1055" text-anchor="middle" class="component">Azure Premium SSD (Persistent Storage for AKS)</text>
+  <text x="800" y="1075" text-anchor="middle" class="label">StorageClass: managed-premium | Total: ~300Gi for ES cluster only</text>
+
+  <!-- Legend -->
+  <text x="1520" y="100" text-anchor="end" class="section-title">Legend:</text>
+  
+  <rect x="1380" y="110" width="40" height="20" rx="3" class="frontend-box"/>
+  <text x="1430" y="125" class="label">Frontend</text>
+  
+  <rect x="1380" y="140" width="40" height="20" rx="3" class="connector-box"/>
+  <text x="1430" y="155" class="label">Connectors</text>
+  
+  <rect x="1380" y="170" width="40" height="20" rx="3" class="worker-box"/>
+  <text x="1430" y="185" class="label">Workers</text>
+  
+  <rect x="1380" y="200" width="40" height="20" rx="3" class="managed-service"/>
+  <text x="1430" y="215" class="label">Managed</text>
+  
+  <line x1="1380" y1="235" x2="1420" y2="235" class="network-arrow"/>
+  <text x="1430" y="240" class="label">Network</text>
+</svg>
