@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTI Foresight Workshop: Step-by-Step Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4f1ea;
+    --paper-2:#ebe6da;
+    --card:#fbfaf6;
+    --ink:#17191e;
+    --muted:#5d6068;
+    --line:#d3ccbc;
+    --line-2:#bdb4a0;
+    --accent:#b1431d;
+    --accent-2:#1f3a52;
+    --warn:#a8341a;
+    --ok:#3f6b4f;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:16px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 28px;}
+
+  /* Header */
+  header{padding:64px 0 30px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;}
+  h1{font-family:'Spectral',serif;font-weight:700;font-size:44px;line-height:1.05;margin:0 0 14px;letter-spacing:-.01em;}
+  .lede{font-family:'Spectral',serif;font-size:20px;line-height:1.5;color:var(--muted);font-weight:400;max-width:640px;margin:0;}
+  .meta{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);margin-top:22px;display:flex;gap:22px;flex-wrap:wrap;}
+
+  /* Contents */
+  nav.toc{margin:30px 0 8px;padding:22px 0;border-bottom:1px solid var(--line);}
+  nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:t;display:grid;grid-template-columns:1fr 1fr;gap:6px 28px;}
+  nav.toc li{counter-increment:t;font-family:'IBM Plex Mono',monospace;font-size:13.5px;}
+  nav.toc li::before{content:"0" counter(t);color:var(--accent);margin-right:12px;}
+  nav.toc a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent;}
+  nav.toc a:hover{border-bottom-color:var(--accent);}
+
+  /* Steps */
+  section.step{padding:54px 0;border-bottom:1px solid var(--line);}
+  .step-num{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;}
+  h2{font-family:'Spectral',serif;font-weight:600;font-size:32px;line-height:1.1;margin:6px 0 10px;letter-spacing:-.01em;}
+  .objective{font-size:17px;color:var(--ink);margin:0 0 22px;max-width:660px;}
+
+  .io{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 26px;font-family:'IBM Plex Mono',monospace;font-size:12px;}
+  .io span{background:var(--paper-2);border:1px solid var(--line);padding:6px 12px;border-radius:2px;}
+  .io b{color:var(--accent-2);font-weight:500;}
+
+  figure{margin:30px 0;}
+  figure svg{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:4px;}
+  figcaption{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5;}
+  figcaption b{color:var(--accent);font-weight:500;}
+
+  h3{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-2);margin:34px 0 12px;}
+  ol.run{padding-left:0;margin:0;list-style:none;counter-reset:r;}
+  ol.run li{counter-increment:r;position:relative;padding:10px 0 10px 46px;border-top:1px solid var(--line);}
+  ol.run li:first-child{border-top:none;}
+  ol.run li::before{content:counter(r);position:absolute;left:0;top:11px;width:28px;height:28px;background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:13px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+  ol.run .t{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--accent);margin-right:8px;}
+
+  .aside{border-left:3px solid var(--accent);background:var(--card);padding:16px 20px;margin:24px 0;border-radius:0 4px 4px 0;}
+  .aside.warn{border-left-color:var(--warn);}
+  .aside .lab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;}
+  .aside p{margin:0;font-size:15px;}
+  .aside.warn .lab{color:var(--warn);}
+
+  footer{padding:46px 0 80px;}
+  footer .lab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 10px;}
+  footer p{font-size:13.5px;color:var(--muted);line-height:1.7;margin:0;}
+
+  /* SVG text classes */
+  svg text{font-family:'IBM Plex Sans',sans-serif;}
+  .s-mono{font-family:'IBM Plex Mono',monospace;}
+  .s-hd{fill:var(--muted);font-size:12px;letter-spacing:.1em;font-family:'IBM Plex Mono',monospace;}
+  .s-name{fill:var(--ink);font-size:14.5px;font-weight:600;}
+  .s-sub{fill:var(--muted);font-size:11px;}
+  .s-axis{fill:var(--accent-2);font-size:12.5px;font-weight:600;font-family:'IBM Plex Mono',monospace;}
+  .s-dot{fill:var(--ink);font-size:11.5px;}
+
+  @media (max-width:640px){
+    h1{font-size:33px;} h2{font-size:26px;}
+    nav.toc ol{grid-template-columns:1fr;}
+    .wrap{padding:0 18px;}
+  }
+  @media print{
+    body{background:#fff;}
+    figure svg{border-color:#999;}
+    section.step{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Facilitation Guide / Future Threat Surface</p>
+  <h1>CTI Foresight Workshop: Step by Step</h1>
+  <p class="lede">A granular run guide for the five-method foresight pipeline. Each step has a procedure, a diagram, a worked example on the financial-sector threat surface, and the failure modes to watch.</p>
+  <div class="meta">
+    <span>HALF DAY / ~4 HOURS</span>
+    <span>6 ANALYSTS</span>
+    <span>OUTPUT &rarr; JUNE 16 DECK</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <ol>
+    <li><a href="#scan">Scanning</a></li>
+    <li><a href="#drivers">Drivers &amp; uncertainty</a></li>
+    <li><a href="#scenarios">Scenarios via 2x2</a></li>
+    <li><a href="#tail">Tail risk</a></li>
+    <li><a href="#indicators">Indicators &amp; calibration</a></li>
+  </ol>
+</nav>
+
+<!-- ============ STEP 1 ============ -->
+<section class="step" id="scan">
+  <span class="step-num">Step 01</span>
+  <h2>Scanning</h2>
+  <p class="objective">Turn six analysts' pre-work signals into one shared, de-duplicated set of named drivers, with cross-category links the individual scans could not see.</p>
+  <div class="io">
+    <span><b>In:</b> per-analyst STEEP-M scans (3-5 sourced signals each)</span>
+    <span><b>Out:</b> 8-12 named drivers</span>
+    <span><b>Time:</b> 35 min</span>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 720 350" role="img" aria-label="Signals across six lenses converge into clusters and then into named drivers">
+      <text x="120" y="28" text-anchor="middle" class="s-hd">STEEP-M SIGNALS</text>
+      <text x="360" y="28" text-anchor="middle" class="s-hd">AFFINITY CLUSTERS</text>
+      <text x="600" y="28" text-anchor="middle" class="s-hd">NAMED DRIVERS</text>
+      <!-- left category chips -->
+      <g class="s-mono" font-size="11.5" fill="var(--accent-2)">
+        <rect x="30" y="52" width="180" height="34" rx="3" fill="var(--paper-2)" stroke="var(--line)"/><text x="44" y="74">Technology / AI</text>
+        <rect x="30" y="96" width="180" height="34" rx="3" fill="var(--paper-2)" stroke="var(--line)"/><text x="44" y="118">Threat-actor economics</text>
+        <rect x="30" y="140" width="180" height="34" rx="3" fill="var(--paper-2)" stroke="var(--line)"/><text x="44" y="162">Regulatory</text>
+        <rect x="30" y="184" width="180" height="34" rx="3" fill="var(--paper-2)" stroke="var(--line)"/><text x="44" y="206">Geopolitical</text>
+        <rect x="30" y="228" width="180" height="34" rx="3" fill="var(--paper-2)" stroke="var(--line)"/><text x="44" y="250">Macro / sector</text>
+        <rect x="30" y="272" width="180" height="34" rx="3" fill="var(--paper-2)" stroke="var(--line)"/><text x="44" y="294">Attack surface</text>
+      </g>
+      <!-- connectors left->mid -->
+      <g stroke="var(--line-2)" fill="none" stroke-width="1">
+        <path d="M210 69 C 270 69 280 130 300 150"/>
+        <path d="M210 113 C 270 113 280 150 300 165"/>
+        <path d="M210 157 C 270 157 285 200 300 230"/>
+        <path d="M210 201 C 270 201 285 175 300 180"/>
+        <path d="M210 245 C 270 245 285 240 300 250"/>
+        <path d="M210 289 C 270 289 285 260 300 265"/>
+      </g>
+      <!-- mid clusters -->
+      <g>
+        <ellipse cx="360" cy="155" rx="62" ry="40" fill="var(--card)" stroke="var(--accent)" stroke-width="1.4"/>
+        <ellipse cx="360" cy="255" rx="58" ry="34" fill="var(--card)" stroke="var(--accent)" stroke-width="1.4"/>
+        <text x="360" y="150" text-anchor="middle" class="s-sub">phishing cost &darr;</text>
+        <text x="360" y="166" text-anchor="middle" class="s-sub">SaaS concentration &uarr;</text>
+        <text x="360" y="255" text-anchor="middle" class="s-sub">private-mkt sprawl</text>
+        <text x="360" y="271" text-anchor="middle" class="s-sub">vendor trust depth</text>
+      </g>
+      <!-- connectors mid->right -->
+      <g stroke="var(--line-2)" fill="none" stroke-width="1">
+        <path d="M422 155 C 470 155 480 150 520 160"/>
+        <path d="M418 255 C 470 255 480 250 520 250"/>
+      </g>
+      <!-- right driver cards -->
+      <g>
+        <rect x="520" y="128" width="172" height="64" rx="3" fill="var(--ink)"/>
+        <text x="534" y="150" fill="var(--paper)" font-size="12.5" font-weight="600">Intrusion cost falls as</text>
+        <text x="534" y="167" fill="var(--paper)" font-size="12.5" font-weight="600">dependency widens</text>
+        <text x="534" y="184" fill="#c9b9a8" class="s-mono" font-size="10">DRIVER A</text>
+        <rect x="520" y="222" width="172" height="64" rx="3" fill="var(--ink)"/>
+        <text x="534" y="244" fill="var(--paper)" font-size="12.5" font-weight="600">Trust concentrates in</text>
+        <text x="534" y="261" fill="var(--paper)" font-size="12.5" font-weight="600">embedded vendors</text>
+        <text x="534" y="278" fill="#c9b9a8" class="s-mono" font-size="10">DRIVER B</text>
+      </g>
+    </svg>
+    <figcaption><b>The move that matters:</b> a Technology signal and an Attack-surface signal cluster into one driver. No single analyst's lens produced it. Clustering across categories is where scanning earns its place.</figcaption>
+  </figure>
+
+  <h3>Run it</h3>
+  <ol class="run">
+    <li><span class="t">2 min</span>Restate the question and the trend-versus-shift distinction. State the two rules out loud: every signal needs a source, and every signal needs a one-line "so what."</li>
+    <li><span class="t">5 min</span>Silent post. One signal per sticky note. Each analyst posts theirs under their STEEP-M category heading on the wall. One signal per sticky forces atomic, movable units.</li>
+    <li><span class="t">3 min</span>Round-robin read-out. Each analyst gives a 30-second tour of their two strongest signals. No debate yet. This gets every voice in before the loudest one sets the frame.</li>
+    <li><span class="t">8 min</span>Affinity cluster. As a group, physically move stickies that point to the same underlying force together. Push for cross-category clusters. Prompt repeatedly: "what force is underneath these?"</li>
+    <li><span class="t">5 min</span>Name each cluster as a driver, phrased as a force, not an event. Write the name on a card above the cluster. Aim for 8 to 12 drivers.</li>
+    <li><span class="t">2 min</span>Debrief. Ask what clustering revealed that no single category saw. Park orphan signals that did not cluster; they are wild-card candidates for Step 4.</li>
+  </ol>
+
+  <div class="aside">
+    <p class="lab">Worked example</p>
+    <p>"Agentic AI lowers the cost of tailored phishing" (Technology) and "third-party SaaS concentration rising" (Attack surface) cluster into a single driver: <em>the cost of credible intrusion is falling while our dependency surface widens.</em></p>
+  </div>
+  <div class="aside warn">
+    <p class="lab">Watch-outs</p>
+    <p>Analysts stay in their lane and miss cross-category links. The "so what" line is where weak signals die, so enforce it. Resist the pull to write drivers as events; a driver is a force that shapes many events.</p>
+  </div>
+</section>
+
+<!-- ============ STEP 2 ============ -->
+<section class="step" id="drivers">
+  <span class="step-num">Step 02</span>
+  <h2>Drivers &amp; uncertainty</h2>
+  <p class="objective">Separate the near-certain baseline from the genuinely uncertain forces, and pick the two high-impact, high-uncertainty drivers that will become your scenario axes.</p>
+  <div class="io">
+    <span><b>In:</b> 8-12 named drivers</span>
+    <span><b>Out:</b> baseline trend list + 2 scenario axes</span>
+    <span><b>Time:</b> 25-30 min</span>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 720 470" role="img" aria-label="Drivers plotted on an impact versus uncertainty grid">
+      <!-- zones -->
+      <rect x="90" y="40" width="285" height="170" fill="#1f3a52" opacity="0.07"/>
+      <rect x="375" y="40" width="270" height="170" fill="#b1431d" opacity="0.09"/>
+      <!-- axes -->
+      <line x1="90" y1="40" x2="90" y2="400" stroke="var(--ink)" stroke-width="1.5"/>
+      <line x1="90" y1="400" x2="660" y2="400" stroke="var(--ink)" stroke-width="1.5"/>
+      <line x1="375" y1="40" x2="375" y2="400" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="4 4"/>
+      <line x1="90" y1="210" x2="660" y2="210" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="4 4"/>
+      <!-- axis labels -->
+      <text x="375" y="430" text-anchor="middle" class="s-axis">UNCERTAINTY &rarr;</text>
+      <text x="58" y="220" text-anchor="middle" class="s-axis" transform="rotate(-90 58 220)">IMPACT &rarr;</text>
+      <!-- zone labels -->
+      <text x="232" y="62" text-anchor="middle" class="s-hd" fill="var(--accent-2)">BASELINE / NEAR-CERTAIN</text>
+      <text x="510" y="62" text-anchor="middle" class="s-hd" fill="var(--accent)">SCENARIO AXES LIVE HERE</text>
+      <!-- dots -->
+      <g>
+        <circle cx="200" cy="120" r="7" fill="var(--accent-2)"/><text x="214" y="124" class="s-dot">Regulatory disclosure pressure</text>
+        <circle cx="285" cy="160" r="7" fill="var(--accent-2)"/><text x="299" y="164" class="s-dot">Ransomware-as-a-service maturity</text>
+        <circle cx="500" cy="95" r="9" fill="var(--accent)"/><text x="516" y="99" class="s-dot">AI: attacker vs defender advantage</text>
+        <circle cx="565" cy="155" r="9" fill="var(--accent)"/><text x="453" y="184" class="s-dot">Dependency: concentrated vs distributed</text>
+        <circle cx="250" cy="320" r="6" fill="var(--muted)"/><text x="264" y="324" class="s-dot">Talent market churn</text>
+        <circle cx="520" cy="330" r="6" fill="var(--muted)"/><text x="370" y="356" class="s-dot">Crypto regulatory regime</text>
+      </g>
+    </svg>
+    <figcaption><b>Two reads of the grid:</b> top-left drivers are your deck's "anchored by current priorities" baseline. Top-right drivers are your scenario axes. Bottom drivers wait. Pick axes that are <b>independent</b> of each other, or the 2x2 collapses into a line.</figcaption>
+  </figure>
+
+  <h3>Run it</h3>
+  <ol class="run">
+    <li><span class="t">3 min</span>Teach the two dimensions. Impact is how much the threat surface changes if this force moves. Uncertainty is how confidently you can predict its direction over the horizon. They are independent.</li>
+    <li><span class="t">5 min</span>Draw the large grid on a whiteboard. Horizontal axis is uncertainty, vertical axis is impact.</li>
+    <li><span class="t">7 min</span>Place each driver. Hand out dots and let the team place drivers, or place by quick group consensus. Use dot spread to expose genuine disagreement rather than papering over it.</li>
+    <li><span class="t">5 min</span>Read the grid. Top-left, high impact and low uncertainty, is your baseline. Top-right, high impact and high uncertainty, holds your axis candidates. The bottom half waits.</li>
+    <li><span class="t">5 min</span>Select two axes from the top-right that are highest impact, genuinely uncertain, and independent of each other.</li>
+    <li><span class="t">2 min</span>Sanity check. State each axis as a spectrum with two plausible poles. If you can confidently predict which pole wins, it is baseline, not an axis.</li>
+  </ol>
+
+  <div class="aside">
+    <p class="lab">Worked example</p>
+    <p>"Regulatory disclosure pressure increases" lands high-impact, low-uncertainty, so it is baseline. "Does AI shift net advantage to attackers or defenders" and "is critical dependency concentrated or distributed" both land high-impact, high-uncertainty, and are independent of each other, so they become the two axes.</p>
+  </div>
+  <div class="aside warn">
+    <p class="lab">Watch-outs</p>
+    <p>Important-but-predictable drivers love to masquerade as uncertainties; demote them to baseline. Correlated axes are the most common failure here and they wreck Step 3.</p>
+  </div>
+</section>
+
+<!-- ============ STEP 3 ============ -->
+<section class="step" id="scenarios">
+  <span class="step-num">Step 03 / Centerpiece</span>
+  <h2>Scenarios via 2x2</h2>
+  <p class="objective">Build four plausible, distinct futures from the two axes, each describing a different threat surface, then stress-test them so they survive a leadership room.</p>
+  <div class="io">
+    <span><b>In:</b> 2 independent axes</span>
+    <span><b>Out:</b> 4 named scenarios + red-team critique</span>
+    <span><b>Time:</b> 75 min</span>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 720 560" role="img" aria-label="Four scenarios on a two-by-two of AI advantage and dependency concentration">
+      <!-- quadrant fills -->
+      <rect x="110" y="70" width="250" height="190" fill="#b1431d" opacity="0.10"/>
+      <rect x="360" y="70" width="250" height="190" fill="#a8341a" opacity="0.16"/>
+      <rect x="110" y="260" width="250" height="190" fill="#3f6b4f" opacity="0.10"/>
+      <rect x="360" y="260" width="250" height="190" fill="#1f3a52" opacity="0.10"/>
+      <!-- axes -->
+      <line x1="360" y1="50" x2="360" y2="470" stroke="var(--ink)" stroke-width="1.5"/>
+      <line x1="110" y1="260" x2="610" y2="260" stroke="var(--ink)" stroke-width="1.5"/>
+      <!-- pole labels -->
+      <text x="360" y="40" text-anchor="middle" class="s-axis">DEPENDENCY CONCENTRATED</text>
+      <text x="360" y="492" text-anchor="middle" class="s-axis">DEPENDENCY DISTRIBUTED</text>
+      <text x="120" y="264" class="s-axis">AI FAVORS</text><text x="120" y="280" class="s-axis">DEFENDERS</text>
+      <text x="600" y="264" text-anchor="end" class="s-axis">AI FAVORS</text><text x="600" y="280" text-anchor="end" class="s-axis">ATTACKERS</text>
+      <!-- quadrant content -->
+      <g>
+        <text x="135" y="115" class="s-name">Defensible Core</text>
+        <text x="135" y="135" class="s-sub">Concentrated, but defenders</text>
+        <text x="135" y="150" class="s-sub">hold the AI edge. Few targets,</text>
+        <text x="135" y="165" class="s-sub">hard targets.</text>
+
+        <text x="385" y="115" class="s-name" fill="var(--warn)">Brittle Monoculture</text>
+        <text x="385" y="135" class="s-sub">Cheap tailored intrusion meets</text>
+        <text x="385" y="150" class="s-sub">a few shared dependencies.</text>
+        <text x="385" y="165" class="s-sub">Worst case. Systemic blast radius.</text>
+
+        <text x="135" y="305" class="s-name">Resilient Mesh</text>
+        <text x="135" y="325" class="s-sub">Distributed and defender-favored.</text>
+        <text x="135" y="340" class="s-sub">Best case. Many small fires,</text>
+        <text x="135" y="355" class="s-sub">none catastrophic.</text>
+
+        <text x="385" y="305" class="s-name">Diffuse Skirmish</text>
+        <text x="385" y="325" class="s-sub">Attackers favored but no single</text>
+        <text x="385" y="340" class="s-sub">chokepoint. High-volume, low</text>
+        <text x="385" y="355" class="s-sub">per-event severity.</text>
+      </g>
+      <text x="360" y="535" text-anchor="middle" class="s-sub">Each quadrant is a conditional world, not a prediction. Name it so people remember it.</text>
+    </svg>
+    <figcaption><b>The axes are the work.</b> If your four quadrants reduce to "good versus bad," the axes were correlated; go back to Step 2. Distinct, surprising quadrants mean you chose well.</figcaption>
+  </figure>
+
+  <h3>Run it</h3>
+  <ol class="run">
+    <li><span class="t">5 min</span>Draw the 2x2 and label all four poles. Make clear each quadrant is a world where both drivers have resolved a particular way.</li>
+    <li><span class="t">10 min</span>We-do. Build one quadrant together as a live demo: name it, sketch what is true in this world, what the threat surface looks like, what attacks get cheap, and where BlackRock is exposed.</li>
+    <li><span class="t">30 min</span>You-do. Split into pairs and assign quadrants. Each pair produces a memorable name, a 3-4 sentence narrative, the dominant threats, BlackRock's exposure, and the "leading domino," the first thing that would happen on the path to this world.</li>
+    <li><span class="t">15 min</span>Gallery walk. Each pair presents its quadrant in three minutes.</li>
+    <li><span class="t">10 min</span>Red-team pass. A designated red hat attacks each scenario for internal consistency, distinctness from its neighbors, and blind spots. Capture every challenge.</li>
+    <li><span class="t">5 min</span>Harvest. List shifts that appear in more than one quadrant (robust) versus those unique to one (contingent). This list feeds Step 5.</li>
+  </ol>
+
+  <div class="aside">
+    <p class="lab">Worked example</p>
+    <p>Axes of AI advantage and dependency concentration yield four worlds: <em>Brittle Monoculture</em> (attacker-favored and concentrated), <em>Defensible Core</em> (defender-favored and concentrated), <em>Diffuse Skirmish</em> (attacker-favored and distributed), and <em>Resilient Mesh</em> (defender-favored and distributed).</p>
+  </div>
+  <div class="aside warn">
+    <p class="lab">Watch-outs</p>
+    <p>Scenarios collapsing into "good versus bad" signals correlated axes. Narratives drifting into prediction misses the point; each quadrant is a conditional. And writing four lightly reskinned versions of today wastes the method.</p>
+  </div>
+</section>
+
+<!-- ============ STEP 4 ============ -->
+<section class="step" id="tail">
+  <span class="step-num">Step 04</span>
+  <h2>Tail risk</h2>
+  <p class="objective">Surface the high-impact, low-probability discontinuities the four scenarios missed, and use imagined failure to expose blind-spot shifts. This is where the "be bold" material comes from.</p>
+  <div class="io">
+    <span><b>In:</b> 4 scenarios + parked orphan signals</span>
+    <span><b>Out:</b> wild-card list + pre-mortem causal chains</span>
+    <span><b>Time:</b> 30 min</span>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 720 380" role="img" aria-label="Probability impact matrix with the tail corner highlighted, and a pre-mortem backward chain">
+      <!-- left: prob/impact matrix -->
+      <rect x="60" y="40" width="135" height="120" fill="var(--warn)" opacity="0.16"/>
+      <line x1="60" y1="40" x2="60" y2="300" stroke="var(--ink)" stroke-width="1.5"/>
+      <line x1="60" y1="300" x2="330" y2="300" stroke="var(--ink)" stroke-width="1.5"/>
+      <text x="195" y="328" text-anchor="middle" class="s-axis">PROBABILITY &rarr;</text>
+      <text x="38" y="170" text-anchor="middle" class="s-axis" transform="rotate(-90 38 170)">IMPACT &rarr;</text>
+      <text x="127" y="34" text-anchor="middle" class="s-hd" fill="var(--warn)">WILD CARDS</text>
+      <text x="127" y="105" text-anchor="middle" class="s-sub">low probability,</text>
+      <text x="127" y="120" text-anchor="middle" class="s-sub">high consequence</text>
+      <text x="127" y="135" text-anchor="middle" class="s-sub">KEEP THESE</text>
+      <text x="265" y="290" text-anchor="middle" class="s-sub">routine, ignore</text>
+      <!-- right: pre-mortem backward chain -->
+      <text x="530" y="34" text-anchor="middle" class="s-hd" fill="var(--accent)">PRE-MORTEM: WORK BACKWARD</text>
+      <g>
+        <rect x="430" y="50" width="200" height="48" rx="3" fill="var(--ink)"/>
+        <text x="530" y="71" text-anchor="middle" fill="var(--paper)" font-size="12.5" font-weight="600">2028: defining breach</text>
+        <text x="530" y="88" text-anchor="middle" fill="#c9b9a8" font-size="11">It already happened.</text>
+
+        <line x1="530" y1="98" x2="530" y2="128" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar)"/>
+        <rect x="430" y="128" width="200" height="44" rx="3" fill="var(--card)" stroke="var(--line-2)"/>
+        <text x="530" y="148" text-anchor="middle" class="s-sub">Proximate cause:</text>
+        <text x="530" y="163" text-anchor="middle" class="s-dot">embedded vendor compromise</text>
+
+        <line x1="530" y1="172" x2="530" y2="202" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar)"/>
+        <rect x="430" y="202" width="200" height="44" rx="3" fill="var(--card)" stroke="var(--line-2)"/>
+        <text x="530" y="222" text-anchor="middle" class="s-sub">Earlier observable:</text>
+        <text x="530" y="237" text-anchor="middle" class="s-dot">anomalous update cadence</text>
+
+        <line x1="530" y1="246" x2="530" y2="276" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar)"/>
+        <rect x="430" y="276" width="200" height="44" rx="3" fill="#b1431d" opacity="0.12"/>
+        <rect x="430" y="276" width="200" height="44" rx="3" fill="none" stroke="var(--accent)"/>
+        <text x="530" y="296" text-anchor="middle" class="s-sub" fill="var(--accent)">becomes an INDICATOR &rarr; Step 5</text>
+        <text x="530" y="311" text-anchor="middle" class="s-dot">and maps to a SHIFT</text>
+      </g>
+      <defs>
+        <marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="var(--accent)"/>
+        </marker>
+      </defs>
+    </svg>
+    <figcaption><b>Two contrarian passes.</b> Wild cards keep the high-impact corner regardless of low odds. The pre-mortem fixes a failure in 2028 and reasons backward, and the earliest observable in that chain becomes a free indicator for Step 5.</figcaption>
+  </figure>
+
+  <h3>Run it &mdash; wild cards</h3>
+  <ol class="run">
+    <li><span class="t">3 min</span>Teach. Wild cards are low-probability, high-consequence events. Low probability is the entry ticket, not a disqualifier. Pull the parked orphan signals from Step 1 back into view.</li>
+    <li><span class="t">7 min</span>Silent brainstorm, then round-robin. Each person names one discontinuity none of the four scenarios captured. Ban the word "unlikely" during this round.</li>
+    <li><span class="t">5 min</span>Plot on a probability-by-impact grid and keep only the high-impact corner.</li>
+  </ol>
+  <h3>Run it &mdash; pre-mortem</h3>
+  <ol class="run">
+    <li><span class="t">2 min</span>Set the frame. "It is 2028. BlackRock has taken a defining InfoSec hit that made the news. It already happened."</li>
+    <li><span class="t">8 min</span>Silent write. Each person writes the headline and the proximate cause. Reasoning backward from a fixed failure beats forward speculation for surfacing blind spots.</li>
+    <li><span class="t">5 min</span>Share and extract. For each compelling pre-mortem, trace the chain back to an early observable. That observable is a candidate indicator, and the failure maps to a shift.</li>
+  </ol>
+
+  <div class="aside">
+    <p class="lab">Worked example</p>
+    <p>A pre-mortem produces: a trusted analytics vendor embedded in the core platform supply chain is compromised and used as a launch point. The backward chain (unreviewed third-party code in a privileged context, anomalous update cadence) exposes a shift: trust concentrates in a few deeply embedded vendors.</p>
+  </div>
+  <div class="aside warn">
+    <p class="lab">Watch-outs</p>
+    <p>The group will try to kill wild cards as too unlikely; that is why you ban the word. Pre-mortems that blame generic "human error" are useless; push for a specific shift. And do not let it become doom theater. Every pre-mortem must yield an indicator.</p>
+  </div>
+</section>
+
+<!-- ============ STEP 5 ============ -->
+<section class="step" id="indicators">
+  <span class="step-num">Step 05</span>
+  <h2>Indicators &amp; calibration</h2>
+  <p class="objective">Convert the harvested shifts into monitorable claims with explicit confidence, so what leaves the room is defensible and trackable rather than speculative.</p>
+  <div class="io">
+    <span><b>In:</b> harvested shifts (robust, contingent, tail)</span>
+    <span><b>Out:</b> 5-7 shifts, each with 2-3 indicators, a probability, a horizon</span>
+    <span><b>Time:</b> 30 min + ongoing</span>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 720 430" role="img" aria-label="An indicator timeline and a calibration curve">
+      <!-- top: indicator timeline -->
+      <text x="60" y="34" class="s-hd" fill="var(--accent)">INDICATORS: A SHIFT MATERIALIZING</text>
+      <line x1="60" y1="90" x2="660" y2="90" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#ar2)"/>
+      <text x="60" y="118" class="s-mono" font-size="11" fill="var(--muted)">now</text>
+      <text x="660" y="118" text-anchor="end" class="s-mono" font-size="11" fill="var(--muted)">+18 months</text>
+      <g>
+        <circle cx="180" cy="90" r="6" fill="var(--accent-2)"/><text x="180" y="72" text-anchor="middle" class="s-sub">spear-phish quality &uarr;</text>
+        <circle cx="360" cy="90" r="6" fill="var(--accent-2)"/><text x="360" y="72" text-anchor="middle" class="s-sub">tooling listed underground</text>
+        <circle cx="560" cy="90" r="8" fill="var(--warn)"/><text x="560" y="72" text-anchor="middle" class="s-sub" fill="var(--warn)">first attributed breach</text>
+      </g>
+      <line x1="500" y1="60" x2="500" y2="125" stroke="var(--warn)" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="500" y="140" text-anchor="middle" class="s-mono" font-size="10" fill="var(--warn)">warning threshold</text>
+      <!-- bottom: calibration curve -->
+      <text x="60" y="195" class="s-hd" fill="var(--accent)">CALIBRATION: BE RIGHT AT THE RATE YOU CLAIM</text>
+      <line x1="110" y1="220" x2="110" y2="390" stroke="var(--ink)" stroke-width="1.5"/>
+      <line x1="110" y1="390" x2="380" y2="390" stroke="var(--ink)" stroke-width="1.5"/>
+      <text x="245" y="416" text-anchor="middle" class="s-axis">FORECAST PROBABILITY &rarr;</text>
+      <text x="88" y="305" text-anchor="middle" class="s-axis" transform="rotate(-90 88 305)">OBSERVED &rarr;</text>
+      <!-- perfect line -->
+      <line x1="110" y1="390" x2="380" y2="220" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text x="330" y="238" class="s-mono" font-size="10" fill="var(--muted)">perfect</text>
+      <!-- overconfidence curve -->
+      <path d="M110 390 C 200 380 250 360 290 320 C 330 285 360 250 380 220" fill="none" stroke="var(--accent)" stroke-width="2"/>
+      <text x="250" y="375" class="s-sub" fill="var(--accent)">your curve: overconfident</text>
+      <!-- right note -->
+      <g class="s-sub">
+        <text x="430" y="250">A claim states a probability and a horizon.</text>
+        <text x="430" y="270">Start from a base rate, then adjust.</text>
+        <text x="430" y="290">Record it so you can score it later.</text>
+        <text x="430" y="318" fill="var(--ink)" font-weight="600">"60% chance that within 3 years an</text>
+        <text x="430" y="335" fill="var(--ink)" font-weight="600">AI-assisted intrusion is the proximate</text>
+        <text x="430" y="352" fill="var(--ink)" font-weight="600">cause of a material breach at a</text>
+        <text x="430" y="369" fill="var(--ink)" font-weight="600">top-10 asset manager."</text>
+      </g>
+      <defs>
+        <marker id="ar2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--ink)"/></marker>
+      </defs>
+    </svg>
+    <figcaption><b>Two halves.</b> Indicators make a shift watchable; each must be specific and collectible or it is not a signpost. Calibration makes a forecast honest; confidence is not calibration, and you only learn the difference by recording forecasts and scoring them.</figcaption>
+  </figure>
+
+  <h3>Run it</h3>
+  <ol class="run">
+    <li><span class="t">8 min</span>Converge. Vote the scenario harvest and tail-risk list down to 5-7 candidate shifts. State each as a one-line claim about a change in the threat surface.</li>
+    <li><span class="t">10 min</span>Indicators. For each shift ask, "what would we observe in the next 6 to 18 months if this is happening?" Write 2-3 concrete, collectible indicators. Test each: "more AI attacks" fails, "first confirmed financial-sector breach attributed to agentic tooling" passes. Assign an owner per shift.</li>
+    <li><span class="t">8 min</span>Calibrate. Restate each shift with an explicit probability and time horizon. Start from an outside-view base rate, then adjust for specifics. Record every forecast.</li>
+    <li><span class="t">4 min</span>Reveal the sealed pre-work forecasts and compare. Where did the room move, and where did it anchor? Carry the live disagreements into the deck as honest analytic-confidence language.</li>
+  </ol>
+
+  <div class="aside">
+    <p class="lab">Worked example</p>
+    <p>Shift: AI lowers the cost of tailored intrusion. Indicators: a measurable rise in high-quality spear-phishing against mid-tier financial firms; underground listings for AI-assisted intrusion tooling; the first breach attributed to agentic tooling. Claim: 60% chance that within three years an AI-assisted intrusion is the proximate cause of a material breach at a top-10 asset manager.</p>
+  </div>
+  <div class="aside warn">
+    <p class="lab">Watch-outs</p>
+    <p>Vague indicators are the most common failure; they must be specific and collectible. Confidence is not calibration, and you only learn calibration by tracking outcomes over time. The forecast record is the first thing dropped under time pressure and the thing with the most evidence behind it, so protect it.</p>
+  </div>
+</section>
+
+<footer>
+  <p class="lab">Sources</p>
+  <p>Heuer &amp; Pherson, Structured Analytic Techniques for Intelligence Analysis. CIA, A Tradecraft Primer: Structured Analytic Techniques for Improving Intelligence Analysis (US Government, March 2009), cia.gov. Peter Schwartz, The Art of the Long View (the 2x2 axes-of-uncertainty method). Gary Klein on the pre-mortem. Chang, Berdini, Mandel &amp; Tetlock, Restructuring Structured Analytic Techniques in Intelligence (on the limits of SATs). Tetlock &amp; Gardner, Superforecasting (base rates, probabilities, calibration).</p>
+</footer>
+
+</div>
+</body>
+</html>
